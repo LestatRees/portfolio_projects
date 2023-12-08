@@ -19,7 +19,7 @@ order by
 --select data we are going to be analyzing
 
 select
-	location
+    location
   , date
   , total_cases
   , new_cases
@@ -35,7 +35,7 @@ order by
 --shows the percantage chance of dying if you contract covid in a specific country
 
 select
-	location
+    location
   , date
   , total_cases
   , total_deaths
