@@ -27,6 +27,7 @@ select
   , population
 from
 	covid_deaths
+where continent is not null
 order by
     1,2
 
@@ -49,10 +50,10 @@ order by
   , 2
 
 --looking at total cases vs population
---shows percantage of population that got covid
+--shows percantage of population infected with covid
 
 select
-	location
+    location
   , date
   , population
   , total_cases
@@ -69,20 +70,18 @@ order by
 --countries with the highest infection rates compared to population
 
 select
-	location
+    location
   , continent
   , population
   , max(total_cases) as highest_infection_count
   , max((total_cases/population)) * 100 as percent_of_population_infected
 from
 	covid_deaths
---where 
---	continent is not null
 --where
 --	location
 --		like '%state%'
 group by
-	location
+    location
   , population
   , continent
 order by
@@ -91,7 +90,7 @@ order by
 --showing countries with the highest death count per population
 
 select
-	location
+    location
   , continent
   , max(cast(total_deaths as int)) as total_death_count
 from
@@ -101,18 +100,17 @@ from
 --		like '%state%'
 	where continent is not null
 group by
-	location
+    location
   , continent
 order by
 	total_death_count desc
 
 --break things down by continent
 
-
 --showing the continents with the highest death count
 
 select
-	continent
+    continent
   , max(cast(total_deaths as int)) as total_death_count
 from
 	covid_deaths
@@ -167,7 +165,7 @@ order by
 --looking at total population vs vaccinations
 
 select
-	dea.continent
+    dea.continent
   , dea.location
   , dea.date
   , dea.population
@@ -191,7 +189,7 @@ order by
 
 with pop_vs_vac
 	( continent
-    , location
+   	, location
 	, date
 	, population
 	, new_vaccinations
@@ -199,7 +197,7 @@ with pop_vs_vac
 	) as
 (
 select
-	dea.continent
+    dea.continent
   , dea.location
   , dea.date
   , dea.population
@@ -217,9 +215,9 @@ where dea.continent is not null
 --    2
 --  , 3
 )
-
+;
 select
-	*
+  *
   , (rolling_vaccinations/population) * 100 as percent_vacinated
 from
 	pop_vs_vac
@@ -229,7 +227,7 @@ from
 drop table if exists #percent_population_vac
 create table #percent_population_vac
 	( continent nvarchar(255)
-    , location nvarchar(255)
+  	, location nvarchar(255)
 	, date datetime
 	, population numeric
 	, new_vaccinations numeric
@@ -238,7 +236,7 @@ create table #percent_population_vac
 
 insert into #percent_population_vac
 select
-	dea.continent
+    dea.continent
   , dea.location
   , dea.date
   , dea.population
@@ -251,14 +249,14 @@ from
 			covid_vaccinations vac
 			on dea.location = vac.location
 			and dea.date = vac.date
-where dea.continent is not null
+--where dea.continent is not null
 --order by
 --    2
 --  , 3
 
 
 select
-	*
+  *
   , (rolling_vaccinations/population) * 100 as percent_vacinated
 from
 	#percent_population_vac
@@ -269,7 +267,7 @@ from
 
 create view percent_population_vac as
 select
-	dea.continent
+    dea.continent
   , dea.location
   , dea.date
   , dea.population
@@ -295,7 +293,7 @@ from
 create view percent_population_infected as
 
 select
-	location
+    location
   , continent
   , population
   , max(total_cases) as highest_infection_count
@@ -305,7 +303,7 @@ from
 where 
 	continent is not null
 group by
-	location
+    location
   , population
   , continent
 
